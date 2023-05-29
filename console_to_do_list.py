@@ -72,9 +72,10 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 items = list(range(0, 57))
 l = len(items)
 
-#####################
 
-#########################################################################
+
+# Стартиране на приложението
+
 clear_console()
 
 print("\n   Зареждане на конзолно приложение за задачи (To-Do list) \n")
@@ -193,10 +194,11 @@ while True:
 
             delete_database(db_connection)
             print("\n Базата данни е изтрита успешно, връшане към основното меню...")
+            input("За да създадете нова таблица в базата данни трябва да рестартирате приложениео.")
 
             # Забавяне между циклите
             time.sleep(3)
-        #input()
+
 
     elif choise == "5":
         clear_console()
@@ -205,3 +207,8 @@ while True:
     else:
         print("Невалиден избор, натиснете 'Enter' за да се върнете в основното меню...")
         input()
+
+
+
+# Създаване на exe
+# "C:\Users\vasilev\AppData\Roaming\Python\Python311\Scripts\pyinstaller.exe" --onefile "G:\My Drive\GitHub\To-Do-List\console_to_do_list.py" --icon="G:\My Drive\GitHub\To-Do-List\Untitled.ico"
