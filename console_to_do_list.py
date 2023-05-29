@@ -212,3 +212,4 @@ while True:
 
 # Създаване на exe
 # "C:\Users\vasilev\AppData\Roaming\Python\Python311\Scripts\pyinstaller.exe" --onefile "G:\My Drive\GitHub\To-Do-List\console_to_do_list.py" --icon="G:\My Drive\GitHub\To-Do-List\Untitled.ico"
+#
