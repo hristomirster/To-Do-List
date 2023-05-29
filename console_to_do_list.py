@@ -44,7 +44,9 @@ db_connection = sqlite3.connect("tasks_to_do_list.db")
 create_tasks_table(db_connection)
 
 
-#############
+# Тази част нах безсрамно си я откраднах от тук:
+# https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
+
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
     Call in a loop to create terminal progress bar
