@@ -11,7 +11,7 @@ def clear_console():
     else:  # за Unix/Linux/Mac
         os.system('clear')
 
-# Създаване на функция за базата sqlite3
+# Създаване на функций за базата sqlite3
 def create_tasks_table(connection):
     cursor = connection.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS tasks
