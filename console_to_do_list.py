@@ -39,7 +39,7 @@ def delete_database(connection):
     cursor.execute("DROP TABLE IF EXISTS tasks")
     connection.commit()
 
-# Създаване на базата данни и таблицата, ако все още не съществуват
+# Създаване на базата данни и таблицата, ако все още не съществува
 db_connection = sqlite3.connect("tasks_to_do_list.db")
 create_tasks_table(db_connection)
 
