@@ -29,6 +29,11 @@ def get_tasks(connection):
     tasks = cursor.fetchall()
     return tasks
 
+def update_task(connection, task_id, new_task):
+    cursor = connection.cursor()
+    cursor.execute("UPDATE tasks SET task = ? WHERE id = ?", (new_task, task_id))
+    connection.commit()
+
 def delete_task(connection, task_id):
     cursor = connection.cursor()
     cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
@@ -82,7 +87,7 @@ print("\n   Зареждане на конзолно приложение за �
 printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
 for i, item in enumerate(items):
     # Do stuff...
-    time.sleep(0.07)
+    time.sleep(0.01)
     # Update Progress Bar
     printProgressBar(i + 1, l, prefix = ' Loading:', suffix = 'Complete', length = 50)
 
@@ -100,6 +105,7 @@ while True:
     # Принтиране на основното меню
     print("     Това е конзолно приложение за задачи.\n")
     print("     1. Добави задача")
+    print("     1.1 Промени задача(редактиране)")
     print("     2. Премахни задача")
     print("     3. Покажи списъка със задачите")
     print("     4. Изтриване на текущата база данни със задачи!")
@@ -131,6 +137,30 @@ while True:
         add_task(db_connection, new_task)
 
         time.sleep(2)
+
+    elif choise == "1.1":
+        # Промяна(редактиране) на текуща задача
+        tasks = get_tasks(db_connection)
+
+        print("\nСписък със задачи до този момент: \n")
+        print("Id Task")
+        print("-- ----")
+        for task in tasks:
+            print(f"{task[0]}. {task[1]}")
+
+        # Въвеждане на номер на задача за модификация
+        task_id = input("\n Въведете номер на задачата, която искате да модифицирате(или 'exit' за връщане към основното меню): ")
+        if task_id.lower() == "exit":
+            print("\n Връщане към основното меню...")
+            time.sleep(2)
+            continue
+        new_task = input("\n Въведете новото съдържание на задачата: ")
+        update_task(db_connection, task_id, new_task)
+        print("\n Задачата е модифицирана успешно. Връщане към основното меню...")
+
+
+        time.sleep(3)
+
 
     elif choise == "2": # Премахване на задача от базата
         # Принтиране на текущите задачи
