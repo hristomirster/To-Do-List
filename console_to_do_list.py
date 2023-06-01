@@ -32,6 +32,11 @@ def update_task(connection, task_id, new_task):
     cursor.execute("UPDATE tasks SET task = ? WHERE id = ?", (new_task, task_id))
     connection.commit()
 
+def update_Last_modified(connection, task_id, Last_modified):
+    cursor = connection.cursor()
+    cursor.execute("UPDATE tasks SET Last_modified = ? WHERE id = ?", (Last_modified, task_id))
+    connection.commit()
+
 def delete_task(connection, task_id):
     cursor = connection.cursor()
     cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
@@ -46,6 +51,15 @@ def delete_database(connection):
 db_connection = sqlite3.connect("tasks_to_do_list.db")
 create_tasks_table(db_connection)
 
+# Принтиране на листа със задачите:
+def list_tasks():
+    tasks = get_tasks(db_connection)
+
+    print("\nСписък със задачи: \n")
+    print("Id Task LastModified")
+    print("-- ---- ------------")
+    for task in tasks:
+        print(f"{task[0]}. {task[1]} - {task[2]}")
 
 # Тази част нах безсрамно си я откраднах от тук:
 # https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
@@ -75,8 +89,6 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 items = list(range(0, 57))
 l = len(items)
 
-
-
 # Стартиране на приложението
 
 clear_console()
@@ -101,25 +113,22 @@ while True:
     clear_console()
 
     # Принтиране на основното меню
-    print("     Това е конзолно приложение за задачи.\n")
+    print("     \n Това е конзолно приложение за задачи.\n")
+    print("     Основно меню:\n")
     print("     1. Добави задача")
     print("     1.1 Промени задача(редактиране)")
+    print("     1.2 Промени кога е ъпдеитната задача(редактиране)")
     print("     2. Премахни задача")
     print("     3. Покажи списъка със задачите")
     print("     4. Изтриване на текущата база данни със задачи!")
     print("     5. Изход")
 
+
     choise = input("\n      Очакваме Вашия избор (1-5): ")
 
     if choise == "1":
         # Принтиране на текущите задачи
-        tasks = get_tasks(db_connection)
-
-        print("\nСписък със задачи до този момент: \n")
-        print("Id Task")
-        print("-- ----")
-        for task in tasks:
-            print(f"{task[0]}. {task[1]}")
+        list_tasks()
 
         new_task = input("\n Въведете нова задача (или 'exit' за връщане към основното меню): ")
 
@@ -136,18 +145,13 @@ while True:
 
         time.sleep(2)
 
-    elif choise == "1.1":
-        # Промяна(редактиране) на текуща задача
-        tasks = get_tasks(db_connection)
+    elif choise == "1.1":  # Промяна на името(редактиране) на текуща задача
 
-        print("\nСписък със задачи до този момент: \n")
-        print("Id Task")
-        print("-- ----")
-        for task in tasks:
-            print(f"{task[0]}. {task[1]}")
+        list_tasks() # Принтиране на текущите задачи
 
         # Въвеждане на номер на задача за модификация
         task_id = input("\n Въведете номер на задачата, която искате да модифицирате(или 'exit' за връщане към основното меню): ")
+
         if task_id.lower() == "exit":
             print("\n Връщане към основното меню...")
             time.sleep(2)
@@ -156,19 +160,25 @@ while True:
         update_task(db_connection, task_id, new_task)
         print("\n Задачата е модифицирана успешно. Връщане към основното меню...")
 
+        time.sleep(3)
+
+    elif choise == "1.2": # Промяна дата последна модификация ->  update_Last_modified()
+        list_tasks() # Принтиране на текущите задачи
+
+        task_id = input("\n Въведете номер на задачата, която искате да модифицирате(или 'exit' за връщане към основното меню): ")
+        if task_id.lower() == "exit":
+            print("\n Връщане към основното меню...")
+            time.sleep(2)
+            continue
+        new_task = input("\n Въведете новото съдържание за последна модификация: ")
+        update_Last_modified(db_connection, task_id, new_task)
+        print("\n Задачата е модифицирана успешно. Връщане към основното меню...")
 
         time.sleep(3)
 
-
     elif choise == "2": # Премахване на задача от базата
-        # Принтиране на текущите задачи
-        tasks = get_tasks(db_connection)
 
-        print("\nСписък със задачи: \n")
-        print("Id Task")
-        print("-- ----")
-        for task in tasks:
-            print(f"{task[0]}. {task[1]}")
+        list_tasks() # Принтиране на текущите задачи
 
         # Въвеждане на команда за изтриване на задача
         command = input("\n Въведете номер(Id) на задачата, която искате да изтриете (или 'exit' за връщане към основното меню): ")
@@ -191,14 +201,7 @@ while True:
         if len(get_tasks(db_connection)) == 0:
             print("\n Списъка със задачи е празен.")
         else:
-            tasks = get_tasks(db_connection)
-
-            # Извеждане на текущите задачи
-            print("\nСписък със задачи: \n")
-            print("Id Task")
-            print("-- ----")
-            for task in tasks:
-                print(f"{task[0]}. {task[1]}")
+            list_tasks() # Принтиране на текущите задачи
 
         print("\n Натисни 'Enter' за да се върнеш към основното меню")
         input()
