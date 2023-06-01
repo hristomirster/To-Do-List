@@ -2,8 +2,6 @@ import os
 import time
 import sqlite3
 
-
-
 # Проверка на операционната система и избор на подходяща команда за изчистване на екрана
 def clear_console():
     if os.name == 'nt':  # за Windows
