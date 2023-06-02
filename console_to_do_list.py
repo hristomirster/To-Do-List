@@ -1,6 +1,7 @@
 import os
 import time
 import sqlite3
+from datetime import datetime
 
 # Проверка на операционната система и избор на подходяща команда за изчистване на екрана
 def clear_console():
@@ -13,7 +14,7 @@ def clear_console():
 def create_tasks_table(connection):
     cursor = connection.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS tasks
-                      (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT)''')
+                      (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, Last_modified TEXT)''')
     connection.commit()
 
 def add_task(connection, task):
@@ -61,6 +62,7 @@ def list_tasks():
     for task in tasks:
         print(f"{task[0]}. {task[1]} - {task[2]}")
 
+
 # Тази част нах безсрамно си я откраднах от тук:
 # https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
 
@@ -104,7 +106,6 @@ for i, item in enumerate(items):
 clear_console()
 #########################################################################
 
-
 task_list = []
 
 # Основен цикъл на приложението
@@ -112,7 +113,15 @@ while True:
     # Изчистване на конзолата
     clear_console()
 
+    # datetime object containing current date and time
+    now = datetime.now()
+    # print("now =", now)
+
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
     # Принтиране на основното меню
+    print(f"    Дата: {dt_string}")
     print("     \n Това е конзолно приложение за задачи.\n")
     print("     Основно меню:\n")
     print("     1. Добави задача")
