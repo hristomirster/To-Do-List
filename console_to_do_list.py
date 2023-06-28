@@ -91,7 +91,7 @@ db_connection = sqlite3.connect("tasks_to_do_list.db")
 create_tasks_table(db_connection)
 
 
-# Принтиране на листа със задачите:
+# Принтиране на листа със ТЕКУЩИ задачи:
 def list_tasks():
     tasks = get_tasks(db_connection)
 
@@ -105,8 +105,26 @@ def list_tasks():
     print(f"Id Task{' ' * (task_index_1_len_of_string - 3)}last_update due_date_is comment")
     print(f"-- {'-' * task_index_1_len_of_string} ----------- ----------- -------")
     for task in tasks:
-        print(
-            f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]}{' ' * 2}{task[3]}{' ' * 1} {task[4]}")
+        if task[4] != "завършен":
+            print(f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]}{' ' * 2}{task[3]}{' ' * 1} {task[4]}")
+
+
+# Принтиране на листа със ЗАВЪРШЕНИ задачи:
+def list_tasks_completed():
+    tasks = get_tasks(db_connection)
+
+    #   Oтстояние в колоните
+    task_index_1_len_of_string = 0
+    for task in tasks:
+        if len(task[1]) > task_index_1_len_of_string:
+            task_index_1_len_of_string = len(task[1])
+
+    print(f"\n{bcolors.WARNING}Списък със ЗАВЪРШЕНИ задачи:{bcolors.ENDC} \n")
+    print(f"Id Task{' ' * (task_index_1_len_of_string - 3)}last_update due_date_is comment")
+    print(f"-- {'-' * task_index_1_len_of_string} ----------- ----------- -------")
+    for task in tasks:
+        if task[4] == "завършен":
+            print(f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]}{' ' * 2}{task[3]}{' ' * 1} {task[4]}")
 
 
 # Тази част нах безсрамно си я откраднах от тук:
@@ -177,7 +195,7 @@ while True:
     print("     1.3 Промени срока за изпълнение на задача(редактиране)")
     print("     1.4 Промени коментар на задача(редактиране)")
     print("     2. Премахни задача")
-    print("     3. Покажи списъка със задачите")
+    print("     3. Покажи списъка със ЗАВЪРШЕНИ задачи")
     print("     4. Изтриване на текущата база данни със задачи!")
     print("     5. Изход")
 
@@ -294,7 +312,7 @@ while True:
         if len(get_tasks(db_connection)) == 0:
             print("\n Списъка със задачи е празен.")
         else:
-            list_tasks()  # Принтиране на текущите задачи
+            list_tasks_completed()  # Принтиране на текущите задачи
 
         print("\n Натисни 'Enter' за да се върнеш към основното меню")
         input()
