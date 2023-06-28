@@ -98,11 +98,6 @@ def list_tasks():
     for task in tasks:
         if len(task[1]) > task_index_1_len_of_string:
             task_index_1_len_of_string = len(task[1])
-    # print(f"task_index_1_len_of_string: {task_index_1_len_of_string}")
-    # task_index_2_len_of_string = 0
-    # for task_2 in tasks:
-    #     if len(task_2[2]) > task_index_2_len_of_string:
-    #         task_index_2_len_of_string = len(task_2[2])
 
     print(f"\n{bcolors.WARNING}Списък със задачи:{bcolors.ENDC} \n")
     print(f"Id Task{' ' * (task_index_1_len_of_string - 3)}last_update due_date_is comment")
@@ -189,7 +184,7 @@ while True:
         list_tasks()  # Принтиране на текущите задачи
 
 
-    choise = input("\n      Очакваме Вашия избор (1-5): ")
+    choise = input(f"\n      {bcolors.BOLD}Очакваме Вашия избор (1-5):{bcolors.ENDC} ")
 
     if choise == "1":
         # list_tasks() #  Принтиране на текущите задачи
