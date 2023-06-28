@@ -3,6 +3,7 @@ import time
 import sqlite3
 from datetime import datetime
 
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -66,6 +67,7 @@ def update_due_date_is(connection, task_id, due_date_is):
     cursor.execute("UPDATE tasks SET due_date_is = ? WHERE id = ?", (due_date_is, task_id))
     connection.commit()
 
+
 def update_comment(connection, task_id, comment):
     cursor = connection.cursor()
     cursor.execute("UPDATE tasks SET comment = ? WHERE id = ?", (comment, task_id))
@@ -103,7 +105,8 @@ def list_tasks():
     print(f"Id Task{' ' * (task_index_1_len_of_string - 3)}last_update due_date_is comment")
     print(f"-- {'-' * task_index_1_len_of_string} ----------- ----------- -------")
     for task in tasks:
-        print(f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]}{' ' * 2}{task[3]}{' ' * 1} {task[4]}")
+        print(
+            f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]}{' ' * 2}{task[3]}{' ' * 1} {task[4]}")
 
 
 # Тази част нах безсрамно си я откраднах от тук:
@@ -182,7 +185,6 @@ while True:
         print("\n Списъка със задачи е празен.")
     else:
         list_tasks()  # Принтиране на текущите задачи
-
 
     choise = input(f"\n      {bcolors.BOLD}Очакваме Вашия избор (1-5):{bcolors.ENDC} ")
 
@@ -299,32 +301,42 @@ while True:
 
     elif choise == "4":  # Изтриване на текyщата база данни
         print()
-        print("     ####################################################")
-        print("     ############### !!! ВНИМАНИЕ !!! ###################")
-        print("     ####################################################")
+        print(f"     {bcolors.FAIL}####################################################{bcolors.ENDC}")
+        print(f"     {bcolors.FAIL}############### !!! ВНИМАНИЕ !!! ###################{bcolors.ENDC}")
+        print(f"     {bcolors.FAIL}####################################################{bcolors.ENDC}")
         print()
         # Изтриване на базата данни
-        confirm = input("Сигурни ли сте, че искате да изтриете базата данни? yes(y)/no(n): ")
+        confirm = input(f"Сигурни ли сте, че искате да изтриете базата данни? {bcolors.FAIL}yes(y){bcolors.ENDC}/{bcolors.OKGREEN}no(n){bcolors.ENDC}: ")
         if confirm.lower() == "yes" or confirm.lower() == "y":
             print()
             printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
             for i, item in enumerate(items):
                 # Do stuff...
-                time.sleep(0.1)
+                time.sleep(0.05)
                 # Update Progress Bar
                 printProgressBar(i + 1, l, prefix='Dleteting DB:', suffix='Complete', length=50)
 
             delete_database(db_connection)
-            print("\n Базата данни е изтрита успешно, връшане към основното меню...")
-            input("За да създадете нова таблица в базата данни трябва да рестартирате приложениео.")
+            # print("\n Базата данни е изтрита успешно, връшане към основното меню...")
+            print("За да създадете нова таблица в базата данни трябва да рестартирате приложениео.")
 
-            # Забавяне между циклите
-            time.sleep(3)
+            # Очакваме Вашия избор (1-5):
+            clear_console()
+            timer = 10
+            while timer > 0:
+                print(f"Приложението ще се изключи автоматично след: {timer} ...")
+                timer -= 1
+                time.sleep(1)
+                clear_console()
+            exit()
 
 
     elif choise == "5":
         clear_console()
         exit()
+
+    # elif choise == "6": #  restart the program
+
 
     else:
         print("Невалиден избор, натиснете 'Enter' за да се върнете в основното меню...")
@@ -332,3 +344,6 @@ while True:
 
 # Създаване на exe
 # "C:\Users\vasilev\AppData\Roaming\Python\Python311\Scripts\pyinstaller.exe" --onefile "G:\My Drive\GitHub\To-Do-List\console_to_do_list.py" --icon="G:\My Drive\GitHub\To-Do-List\console_to_do_list_app\Untitled.ico"
+
+# cd "G:\My Drive\GitHub\To-Do-List_Prod\"
+# pyinstaller.exe --onefile "G:\My Drive\GitHub\To-Do-List_Prod\console_to_do_list.py" --icon="Untitled.ico"
