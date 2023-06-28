@@ -18,9 +18,9 @@ def create_tasks_table(connection):
     cursor.execute('''CREATE TABLE IF NOT EXISTS tasks 
     (id INTEGER PRIMARY KEY AUTOINCREMENT, 
     task TEXT, 
-    additional_comments TEXT, 
+    last_update TEXT, 
     due_date_is TEXT, 
-    last_update TEXT)
+    comment TEXT)
     ''')
     connection.commit()
 
@@ -44,15 +44,20 @@ def update_task(connection, task_id, new_task):
     connection.commit()
 
 
-def update_additional_comments(connection, task_id, additional_comments):
+def update_last_update(connection, task_id, last_update):
     cursor = connection.cursor()
-    cursor.execute("UPDATE tasks SET additional_comments = ? WHERE id = ?", (additional_comments, task_id))
+    cursor.execute("UPDATE tasks SET last_update = ? WHERE id = ?", (last_update, task_id))
     connection.commit()
 
 
 def update_due_date_is(connection, task_id, due_date_is):
     cursor = connection.cursor()
     cursor.execute("UPDATE tasks SET due_date_is = ? WHERE id = ?", (due_date_is, task_id))
+    connection.commit()
+
+def update_comment(connection, task_id, comment):
+    cursor = connection.cursor()
+    cursor.execute("UPDATE tasks SET comment = ? WHERE id = ?", (comment, task_id))
     connection.commit()
 
 
@@ -89,10 +94,10 @@ def list_tasks():
     #         task_index_2_len_of_string = len(task_2[2])
 
     print("\nСписък със задачи: \n")
-    print(f"Id Task{' ' * (task_index_1_len_of_string - 3)}additional_comments due_date_is last_update")
-    print(f"-- {'-' * task_index_1_len_of_string} ------------------- ----------- -----------")
+    print(f"Id Task{' ' * (task_index_1_len_of_string - 3)}last_update due_date_is comment")
+    print(f"-- {'-' * task_index_1_len_of_string} ----------- ----------- -------")
     for task in tasks:
-        print(f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]} {task[3]} {task[4]}")
+        print(f"{task[0]}. {task[1]}{' ' * (task_index_1_len_of_string - len(task[1]))} {task[2]}{' ' * 2}{task[3]}{' ' * 1} {task[4]}")
 
 
 # Тази част нах безсрамно си я откраднах от тук:
@@ -158,8 +163,10 @@ while True:
     print("     \n Това е конзолно приложение за задачи.\n")
     print("     Основно меню:\n")
     print("     1. Добави задача")
-    print("     1.1 Промени задача(редактиране)")
-    print("     1.2 Промени кога е ъпдеитната задача(редактиране)")
+    print("         1.1 Промени задача(редактиране)")
+    print("         1.2 Промени кога е ъпдеитната задача(редактиране)")
+    print("         1.3 Промени срока за изпълнение на задача(редактиране)")
+    print("         1.4 Промени коментар на задача(редактиране)")
     print("     2. Премахни задача")
     print("     3. Покажи списъка със задачите")
     print("     4. Изтриване на текущата база данни със задачи!")
@@ -209,7 +216,7 @@ while True:
 
         time.sleep(3)
 
-    elif choise == "1.2":  # Промяна дата последна модификация ->  update_additional_comments()
+    elif choise == "1.2":  # Промяна дата последна модификация ->  update_last_update()
         list_tasks()  # Принтиране на текущите задачи
 
         task_id = input(
@@ -219,10 +226,41 @@ while True:
             time.sleep(2)
             continue
         new_task = input("\n Въведете новото съдържание за последна модификация: ")
-        update_additional_comments(db_connection, task_id, new_task)
+        update_last_update(db_connection, task_id, new_task)
         print("\n Задачата е модифицирана успешно. Връщане към основното меню...")
 
         time.sleep(3)
+
+    elif choise == "1.3":  # Промяна срока за изпълнение на задача ->  update_due_date_is()
+        list_tasks()  # Принтиране на текущите задачи
+
+        task_id = input(
+            "\n Въведете номер на задачата, която искате да модифицирате(или 'exit' за връщане към основното меню): ")
+        if task_id.lower() == "exit":
+            print("\n Връщане към основното меню...")
+            time.sleep(2)
+            continue
+        new_task = input("\n Въведете новото съдържание за краен срок на изпълнение: ")
+        update_due_date_is(db_connection, task_id, new_task)
+        print("\n Задачата е модифицирана успешно. Връщане към основното меню...")
+
+        time.sleep(3)
+
+    elif choise == "1.4":  # Промяна коментар на задача ->  update_comment()
+        list_tasks()  # Принтиране на текущите задачи
+
+        task_id = input(
+            "\n Въведете номер на задачата, която искате да коментирате(или 'exit' за връщане към основното меню): ")
+        if task_id.lower() == "exit":
+            print("\n Връщане към основното меню...")
+            time.sleep(2)
+            continue
+        new_task = input("\n Въведете новото съдържание за коментар: ")
+        update_comment(db_connection, task_id, new_task)
+        print("\n Задачата е модифицирана успешно. Връщане към основното меню...")
+
+        time.sleep(3)
+
 
     elif choise == "2":  # Премахване на задача от базата
 
